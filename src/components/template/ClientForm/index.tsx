@@ -12,6 +12,7 @@ import { isInfancyVerification } from "../../../utils/isInfancyVerification"
 
 interface IClientForm {
     handleSubmit: (values: IClient)=> void;
+    handleCancel: ()=> void;
     titlePage: string;
     values?: IClient
 }
@@ -267,6 +268,7 @@ export const ClientForm = ({ ...props }: IClientForm) =>{
                             <Button 
                                 className="me-3"
                                 variant="outline-danger"
+                                onClick={props.handleCancel}
                             >
                                 Cancelar
                             </Button>

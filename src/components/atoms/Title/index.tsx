@@ -7,6 +7,6 @@ export interface ITitle {
 
 export const Title = ({ ...props }: ITitle)=>{
     return(
-        <h1>{props.title}</h1>
+        <h1 className='fw-bold'>{props.title}</h1>
     )
 }
