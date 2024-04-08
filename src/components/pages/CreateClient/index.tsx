@@ -1,6 +1,6 @@
 import { ClientForm } from "../../template/ClientForm";
 
-import { IClient, IInfacy } from "../../../types/client";
+import { IClient,  } from "../../../types/client";
 import { createClient } from "../../../services/Client/createClient";
 import { useState } from "react";
 import { ToastCoomponent } from "../../atoms/Toast";
@@ -11,16 +11,21 @@ export const CreateClient = () => {
     const navigate = useNavigate();
 
     const [show, setShow] = useState<boolean>(false);
+    const [message, setMessage] = useState<string>('');
 
-    async function handleCreateClient(values: IClient | IInfacy){
+    async function handleCreateClient(values: IClient ){
         const body = values;
         if(!isInfancyVerification(body.birthDate)){
-            (body as IInfacy).responsible = null
+            body.responsible = null
         }
         const response = await createClient(values);
-        if(!response){
+        console.log(response)
+        if(response.mensagem !== 'Sucesso'){
+            setMessage(response.mensagem)
             setShow(true)
+            return ;
         }
+        navigate('/')
         return response;
     }
 
@@ -35,7 +40,7 @@ export const CreateClient = () => {
             <ToastCoomponent 
                 show={show}
                 setShow={(value)=> {setShow(value)}}
-                message="CPF já cadastrado!"
+                message={message}
             />
         </>
     )

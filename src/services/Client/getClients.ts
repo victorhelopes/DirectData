@@ -4,7 +4,7 @@ export async function getClients() {
     try{
         const { data } = await api.get('/Subscribe');
         return data
-    }catch(e){
-        console.log(e)
+    }catch(e: any){
+        return e.response.data
     }
 }

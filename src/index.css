@@ -2,6 +2,7 @@
   --background-color: #DDEDFF;
   --primary-default-color: #4051E6;
   --primary-dark-color: #071437;
+  --cancel-color: #F50000;
 }
 
 body, html, #root{

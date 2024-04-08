@@ -1,14 +1,15 @@
 import { useState } from "react"
 
 import { Button } from "react-bootstrap"
-import { number, object, string } from "yup"
-import { cpf } from "cpf-cnpj-validator"
 import { CardForm } from "../../organisms/CardForm"
 import { Form, Formik } from "formik"
 import { Title } from "../../atoms/Title"
 import { IClient } from "../../../types/client"
 
 import { isInfancyVerification } from "../../../utils/isInfancyVerification"
+import { clientSchema } from "../../../utils/clientSchema"
+import { responsibleSchema } from "../../../utils/responsibleSchema"
+import { object } from "yup"
 
 interface IClientForm {
     handleSubmit: (values: IClient)=> void;
@@ -19,44 +20,6 @@ interface IClientForm {
 
 export const ClientForm = ({ ...props }: IClientForm) =>{
     const [isInfancy, setIsInfancy] = useState<boolean>(false);
-
-    const responsibleSchema = object({
-        name: string().required('Campo obrigatório'),
-        familyName: string().required('Campo obrigatório'),
-        birthDate: string().required('Campo obrigatório'),
-        cpf: string().test('cpfIsValide', 'CPF não é válido', (value) => {return value ? cpf.isValid(value): false}).required('Campo obrigatório'),
-    })
-
-    const clientSchema = object({
-        name: string().required('Campo obrigatório'),
-        familyName: string().required('Campo obrigatório'),
-        birthDate: string().required('Campo obrigatório'),
-        cpf: string()
-            .test(
-                'cpfIsValide',
-                'CPF não é válido', 
-                (value) => {
-                    return value ? cpf.isValid(value): false
-            }
-        ).required('Campo obrigatório'),
-        weight: number().required('Campo obrigatório'),
-        height: number().required('Campo obrigatório'),
-        email: string().email().required('Campo obrigatório'),
-        telephone: string().length(16).required('Campo obrigatório')
-            .test(
-                '', 
-                'Telefone está incompleto', 
-                (value)=> {
-                    return value.replaceAll('_','').length === 16
-                }
-            ),
-        street: string().required('Campo obrigatório'),
-        number: number().required('Campo obrigatório').positive().integer(),
-        complement: string(),
-        cep: string().required('Campo obrigatório'),
-        city: string().required('Campo obrigatório'),
-        neighborhood: string().required('Campo obrigatório'),
-    })
 
     function createSchema(isInfancy: boolean){
         if(isInfancy){
@@ -70,25 +33,25 @@ export const ClientForm = ({ ...props }: IClientForm) =>{
             <Title title={props.titlePage}/>
             <Formik
                 initialValues={{
-                    name: '',
-                    familyName: '',
-                    birthDate: '',
-                    cpf: '',
-                    weight: '',
-                    height: '',
-                    email: '',
-                    telephone: '',
-                    street: '',
-                    number: '',
-                    complement: '',
-                    cep: '',
-                    city: '',
-                    neighborhood: '',
+                    name: props.values?.name || '',
+                    familyName: props.values?.familyName || '',
+                    birthDate: props.values?.birthDate || '',
+                    cpf: props.values?.cpf || '',
+                    weight: props.values?.weight || '',
+                    height: props.values?.height || '',
+                    email: props.values?.email || '',
+                    telephone: props.values?.telephone || '',
+                    street: props.values?.street || '',
+                    number: props.values?.number || '',
+                    complement: props.values?.complement || '',
+                    cep: props.values?.cep || '',
+                    city: props.values?.city || '',
+                    neighborhood: props.values?.neighborhood || '',
                     responsible:{
-                        name: '',
-                        familyName: '',
-                        birthDate: '',
-                        cpf: ''
+                        name: props.values?.responsible?.name || '',
+                        familyName: props.values?.responsible?.familyName || '',
+                        birthDate: props.values?.responsible?.birthDate || '',
+                        cpf: props.values?.responsible?.cpf || ''
                     }
                 }}
 

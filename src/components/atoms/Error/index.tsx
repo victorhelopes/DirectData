@@ -5,5 +5,5 @@ export interface IError {
 }
 
 export const Error = ( { ...props }: IError)=> {
-    return <p className="mb-0">{props.errorMessage}</p>
+    return <p className="mb-0 error">{props.errorMessage}</p>
 }

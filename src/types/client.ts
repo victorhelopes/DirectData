@@ -11,10 +11,6 @@ export interface IClient extends IPerson {
     city: string;
     birthDate: string;
     neighborhood: string
+    responsible: IPerson | null;
     complement?: string;
-}
-
-
-export interface IInfacy extends IClient{
-    responsible: IResponsible;
 }
