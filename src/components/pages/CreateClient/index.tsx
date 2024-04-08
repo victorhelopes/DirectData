@@ -11,21 +11,28 @@ export const CreateClient = () => {
     const navigate = useNavigate();
 
     const [show, setShow] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
     const [message, setMessage] = useState<string>('');
+    const [type, setType] = useState<'error' | 'success'>('error');
 
     async function handleCreateClient(values: IClient ){
+        setLoading(true);
         const body = values;
         if(!isInfancyVerification(body.birthDate)){
             body.responsible = null
         }
         const response = await createClient(values);
-        console.log(response)
+        setLoading(false);
         if(response.mensagem !== 'Sucesso'){
             setMessage(response.mensagem)
-            setShow(true)
+            setShow(true);
+            setType('error')
             return ;
         }
-        navigate('/')
+        setType('success')
+        setMessage('Cadastrado com sucesso');
+        setShow(true);
+        setTimeout(()=>{navigate('/')}, 2000);
         return response;
     }
 
@@ -35,12 +42,14 @@ export const CreateClient = () => {
                 titlePage="Cadastro de cliente" 
                 handleSubmit={(value) => {handleCreateClient(value)}}
                 handleCancel={()=>{navigate('/')}}
+                loading={loading}
             />
             
             <ToastCoomponent 
                 show={show}
                 setShow={(value)=> {setShow(value)}}
                 message={message}
+                type={type}
             />
         </>
     )

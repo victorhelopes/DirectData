@@ -10,6 +10,7 @@ export const ModalConfirmAction = ({ ...props}: IModalConfirmAction) =>{
             confirmAction={props.confirmAction}
             confirmButtonLabel={props.confirmButtonLabel}
             modalTitle={props.modalTitle}
+            loading={props.loading}
         >
             <p>Você tem certeza que deseja alterar esses dados?</p>
         </Modal>

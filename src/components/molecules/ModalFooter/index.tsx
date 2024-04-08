@@ -1,10 +1,12 @@
 import { Button } from "react-bootstrap";
+import { Loading } from "../../atoms/Loading";
 
 export interface IModalFooter{
     cancelButtonLabel: string;
     confirmButtonLabel: string;
     cancelAction: () => void;
     confirmAction: () => void;
+    loading: boolean;
 }
 
 export const ModalFooter = ( { ...props }: IModalFooter)=>{
@@ -15,13 +17,22 @@ export const ModalFooter = ( { ...props }: IModalFooter)=>{
                 variant="outline-danger"
                 onClick={props.cancelAction}
             >
-                {props.cancelButtonLabel}
+                {props.loading?
+                    <Loading/>  
+                    :
+                    props.cancelButtonLabel
+                }
             </Button>
             <Button 
                 variant="success"
                 onClick={props.confirmAction}
             >
-                {props.confirmButtonLabel}
+                
+                {props.loading?
+                    <Loading/>  
+                :
+                    props.confirmButtonLabel
+                }
             </Button>
         </div>
     )

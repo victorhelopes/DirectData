@@ -10,12 +10,14 @@ import { isInfancyVerification } from "../../../utils/isInfancyVerification"
 import { clientSchema } from "../../../utils/clientSchema"
 import { responsibleSchema } from "../../../utils/responsibleSchema"
 import { object } from "yup"
+import { Loading } from "../../atoms/Loading"
 
 interface IClientForm {
     handleSubmit: (values: IClient)=> void;
     handleCancel: ()=> void;
     titlePage: string;
-    values?: IClient
+    loading: boolean;
+    values?: IClient;
 }
 
 export const ClientForm = ({ ...props }: IClientForm) =>{
@@ -233,13 +235,21 @@ export const ClientForm = ({ ...props }: IClientForm) =>{
                                 variant="outline-danger"
                                 onClick={props.handleCancel}
                             >
-                                Cancelar
+                                {props.loading?
+                                    <Loading/>    
+                                :
+                                    'Cancelar'
+                                }
                             </Button>
                             <Button 
                                 variant="success" 
                                 type="submit"
                             >
-                                Enviar
+                                {props.loading?
+                                    <Loading/>    
+                                :
+                                    'Enviar'
+                                }
                             </Button>
                         </div>
                     </Form>

@@ -6,40 +6,64 @@ import { getClientInfo } from "../../../services/Client/getClientInfo";
 import { updateClient } from "../../../services/Client/updateClient";
 import { isInfancyVerification } from "../../../utils/isInfancyVerification";
 import { ModalConfirmAction } from "../../template/ModalConfirmAction";
+import { ToastCoomponent } from "../../atoms/Toast";
+import { Loading } from "../../atoms/Loading";
 
 export const UpdateClient = () =>{
     const navigate = useNavigate();
     const { cpf } = useParams();
 
+    const [show, setShow] = useState<boolean>(false);
+    const [gettingInfo, setGettingInfo] = useState<boolean>(true);
+    const [message, setMessage] = useState<string>('');
+    const [type, setType] = useState<'error' | 'success'>('error');
     const [clientInfo, setClientInfo] = useState<IClient>();
+    const [loading, setLoading] = useState<boolean>(false);
     const [modalConfirm, setModalConfirm] = useState<boolean>(false);
 
     useEffect(()=>{
         const getClientInfos = async ()=>   {
             const retorno = await getClientInfo(cpf || '');
-            if(retorno){
-                setClientInfo(retorno)
+            setGettingInfo(false)
+            if(retorno === 'CPF não encontrado'){
+                setShow(true);
+                setType('error')
+                setMessage(retorno);
+                setTimeout(()=>{navigate('/')}, 2000)
+                return;
             }
+                setClientInfo(retorno as IClient);
         }
         getClientInfos();
-    },[cpf])
+    },[cpf, navigate])
 
     async function handleSubmit(values: IClient){
+        setLoading(true);
         if(!isInfancyVerification(values.birthDate)){
             values.responsible = null
         }
-        const { mensagem } = await updateClient({
+        const response = await updateClient({
             CPF: cpf || '', 
             body: values
         });
+        setLoading(false);
 
-        if(mensagem === "Sucesso"){
-            navigate('/')
+        if(response.mensagem !== 'Sucesso'){
+            setMessage(response.mensagem)
+            setShow(true)
+            return ;
         }
+        setType('success')
+        setMessage('Atualizado com sucesso');
+        setTimeout(()=>{navigate('/')}, 2000);
+        return response;
     }
 
     return (
         <div>
+            {gettingInfo && 
+                <Loading/>
+            }
             {clientInfo && 
                 <ClientForm 
                     values={clientInfo}
@@ -47,6 +71,7 @@ export const UpdateClient = () =>{
                         setClientInfo(value);
                         setModalConfirm(true)
                     }}
+                    loading={loading}
                     handleCancel={()=>{
                         navigate('/')
                     }}
@@ -64,9 +89,16 @@ export const UpdateClient = () =>{
                     if(clientInfo)
                         handleSubmit(clientInfo)
                 }}
+                loading={loading}
                 confirmButtonLabel="Atualizar"
                 modalTitle="Atualizar os dados"
             />}
+            <ToastCoomponent 
+                show={show}
+                setShow={(value)=> {setShow(value)}}
+                message={message}
+                type={type}
+            />
         </div>
     )
 }

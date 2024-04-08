@@ -6,6 +6,7 @@ import './styles.css'
 
 export interface IModal extends IModalHeader, IModalFooter {
     children?: React.ReactNode;
+    loading: boolean;
     modalTitle: string;
 }
 
@@ -24,6 +25,7 @@ export const Modal = ( {...props}: IModal)=>{
                         cancelButtonLabel={props.cancelButtonLabel}
                         confirmAction={props.confirmAction}
                         confirmButtonLabel={props.confirmButtonLabel}
+                        loading={props.loading}
                     />
                 </Card>
             </div>
