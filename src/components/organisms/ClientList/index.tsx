@@ -19,7 +19,7 @@ export const ClientList = ()=>{
     return(
         <>
             {clients.map((element: IClient) => {
-                return (<ClientInfos clientInfos={element}/>)
+                return (<ClientInfos key={element.cpf} clientInfos={element}/>)
             })}
         </>
     )

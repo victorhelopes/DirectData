@@ -5,12 +5,14 @@ import { IClient } from "../../../types/client";
 import { getClientInfo } from "../../../services/Client/getClientInfo";
 import { updateClient } from "../../../services/Client/updateClient";
 import { isInfancyVerification } from "../../../utils/isInfancyVerification";
+import { ModalConfirmAction } from "../../template/ModalConfirmAction";
 
 export const UpdateClient = () =>{
     const navigate = useNavigate();
     const { cpf } = useParams();
 
     const [clientInfo, setClientInfo] = useState<IClient>();
+    const [modalConfirm, setModalConfirm] = useState<boolean>(false);
 
     useEffect(()=>{
         const getClientInfos = async ()=>   {
@@ -22,27 +24,48 @@ export const UpdateClient = () =>{
         getClientInfos();
     },[cpf])
 
+    async function handleSubmit(values: IClient){
+        if(!isInfancyVerification(values.birthDate)){
+            values.responsible = null
+        }
+        const { mensagem } = await updateClient({
+            CPF: cpf || '', 
+            body: values
+        });
+
+        if(mensagem === "Sucesso"){
+            navigate('/')
+        }
+    }
+
     return (
         <div>
-            {clientInfo && <ClientForm 
-                values={clientInfo}
-                handleSubmit={async(values: IClient)=>{
-                    if(!isInfancyVerification(values.birthDate)){
-                        values.responsible = null
-                    }
-                    const { mensagem } = await updateClient({
-                        CPF: cpf || '', 
-                        body: values
-                    });
-
-                    if(mensagem === "Sucesso"){
+            {clientInfo && 
+                <ClientForm 
+                    values={clientInfo}
+                    handleSubmit={(value) => {
+                        setClientInfo(value);
+                        setModalConfirm(true)
+                    }}
+                    handleCancel={()=>{
                         navigate('/')
-                    }
+                    }}
+                    titlePage="Atualizar cliente"
+                />
+            }
+
+            {modalConfirm && 
+                <ModalConfirmAction
+                cancelAction={()=>{
+                    setModalConfirm(false)
                 }}
-                handleCancel={()=>{
-                    navigate('/')
+                cancelButtonLabel="Cancelar"
+                confirmAction={()=>{
+                    if(clientInfo)
+                        handleSubmit(clientInfo)
                 }}
-                titlePage="Atualizar cliente"
+                confirmButtonLabel="Atualizar"
+                modalTitle="Atualizar os dados"
             />}
         </div>
     )
