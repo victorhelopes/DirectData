@@ -11,22 +11,20 @@ export const ClientInfos = ({ ...props }: IClientInfos)=>{
     const navigate = useNavigate();
 
     return(
-        <div className="d-flex justify-content-between" key={props.clientInfos.cpf}>
-            <Icon iconName="bi bi-list"/>
-            <Info label="Nome" value={props.clientInfos.name}/>
-            <Info label="Sobrenome" value={props.clientInfos.familyName}/>
-            <Info label="Data de nascimento" value={props.clientInfos.birthDate}/>
-            <Info label="Telefone" value={props.clientInfos.telephone}/>
-            <Info label="Email" value={props.clientInfos.email}/>
-            <div>
+        <tr>
+            <Info value={props.clientInfos.name}/>
+            <Info value={props.clientInfos.familyName}/>
+            <Info value={props.clientInfos.birthDate}/>
+            <Info value={props.clientInfos.telephone}/>
+            <Info value={props.clientInfos.email}/>
+            <td>
                 <Icon 
-                    iconName="bi bi-pencil me-3" 
+                    iconName="bi bi-pencil" 
                     onClick={()=>{ 
                         navigate(`/edit-client/cpf=${props.clientInfos.cpf}`)
                     }}
                 />
-                <Icon iconName="bi bi-trash"/>
-            </div>
-        </div>
+            </td>
+        </tr>
     )
 }

@@ -1,0 +1,1 @@
+export type SORTABLE_COLUMNS = 'name' | 'familyName'
